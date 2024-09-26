@@ -6,6 +6,7 @@ import {
   signInWithPopup,
   GoogleAuthProvider,
   signOut,
+  FacebookAuthProvider,
 } from "firebase/auth";
 import {
   getFirestore,
@@ -19,7 +20,10 @@ import { firebaseConfig } from "@/firebase/config";
 import { FirebaseContext } from "@/firebase/firebase.context";
 import { useEffect, useState } from "react";
 
-const googleAuthProvider = new GoogleAuthProvider();
+const authProviders = {
+  google: new GoogleAuthProvider(),
+  facebook: new FacebookAuthProvider(),
+};
 
 export default function App({ Component, pageProps }) {
   const [auth, setAuth] = useState(null);
@@ -36,6 +40,7 @@ export default function App({ Component, pageProps }) {
   useEffect(() => {
     if (auth) {
       const unsubscribe = auth.onAuthStateChanged(data => {
+        console.log(data);
         setUser(data);
       });
 
@@ -63,7 +68,8 @@ export default function App({ Component, pageProps }) {
     }
   }, [db]);
 
-  const signin = async () => await signInWithPopup(auth, googleAuthProvider);
+  const signin = async (provider = "google") =>
+    await signInWithPopup(auth, authProviders[provider.toLowerCase()]);
 
   const signout = async () => await signOut(auth);
 
