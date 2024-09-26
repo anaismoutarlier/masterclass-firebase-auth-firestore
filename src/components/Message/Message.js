@@ -14,6 +14,7 @@ export default function Message({ message, isOwnMessage }) {
       }`}
     >
       <img
+        title={message?.user.displayName}
         src={message?.user.photoURL || randomAvatar}
         alt={message?.user.displayName || ""}
         className={styles.avatar}
